@@ -1,6 +1,15 @@
 import React, { useState, useRef, useCallback } from 'react'
 import useGetDevices from './useGetDevices'
-// import Device from './componenets/Device.js'
+import Device from './components/Device.js'
+import './style.css'
+
+const flexBox = {
+  display: "flex",
+  flexDirection: "row",
+  flexWrap: "wrap",
+  justifyContent: "center",
+  padding: 30
+}
 
 function App() {
   // offset is the index of the next device to be grabbed from the API
@@ -18,8 +27,13 @@ function App() {
   //    and change the offset (if there are more devices to load)
   const observer = useRef()
   const lastDeviceElementRef = useCallback(node => {
-    if (loading) return
-    if (observer.current) observer.current.disconnect()
+    if (loading) {
+      return
+    }
+
+    if (observer.current) {
+      observer.current.disconnect()
+    }
 
     observer.current = new IntersectionObserver(entries => {
       if (entries[0].isIntersecting && hasMore) {
@@ -27,16 +41,18 @@ function App() {
       }
     })
 
-    if (node) observer.current.observe(node)
+    if (node) {
+      observer.current.observe(node)
+    }
   }, [loading, hasMore])
 
   return (
-    <div>
+    <div style={flexBox}>
       {devices.map((device, index) => {
         if (devices.length === index + 1) {
-          return <div ref={lastDeviceElementRef} key={device.title}> {device.title} </div>
+          return <div ref={lastDeviceElementRef} key={device.title}> <Device device={device}></Device> </div>
         } else {
-          return <div key={device.title}> {device.title} </div>
+          return <div ref={lastDeviceElementRef} key={device.title}> <Device device={device} ></Device> </div>
         }
       })}
 

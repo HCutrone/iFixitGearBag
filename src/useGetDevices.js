@@ -19,7 +19,7 @@ export default function useGetDevices(offset, width) {
       setDevices(prevDevices => {
         return [...prevDevices, ...res.data]
       })
-      setHasMore(res.data.length > 0)
+      setHasMore(res.data.length === width)
       setLoading(false)
     }).catch(e => {
       setError(true)
