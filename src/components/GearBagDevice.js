@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-const Device = ( { device } ) => {
+const GearBagDevice = ( { device } ) => {
   // the device component will display the images of each device as well as the title
   // then, when the mouse hovers over it will display the summary
   //TODO signify when device is in the gear bag
@@ -27,7 +27,7 @@ const Device = ( { device } ) => {
   }
 
   const onDragStart = (event, deviceName) => {
-    event.dataTransfer.setData("newDevice", deviceName)
+    event.dataTransfer.setData("bagDevice", deviceName)
   }
 
   // return one div with the background image as the device image, and two <p>s
@@ -51,4 +51,4 @@ const Device = ( { device } ) => {
   )
 }
 
-export default Device
+export default GearBagDevice
