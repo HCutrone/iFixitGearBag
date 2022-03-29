@@ -36,7 +36,7 @@ const GearBag = ( { gearBag, setGearBag, devices } ) => {
 
   return (
     <div className='gearBagStyle' onDrop={(event) => onDropInBag(event)} onDragOver={(event) => onDragOver(event)}>
-      <h3 style={{paddingLeft: 10}}>Your Gear:</h3>
+      <h2 style={{paddingLeft: 10}}>Your Gear:</h2>
       <div className='gearBagFlex'>
         {gearBag.map((device) => {
           localStorage.setItem("gearBag", JSON.stringify(gearBag))

@@ -1,9 +1,43 @@
+body {
+  background-color: black;
+  color: white;
+}
+
+header {
+  color: white;
+  text-align: center;
+}
+
+header h1 {
+  font-size: 50px;
+}
+
+header p {
+  margin-bottom: 30px;
+}
+
+input {
+  display: block;
+  margin-right: auto;
+  margin-left: auto;
+  font-size: 24px;
+  width: 300px;
+}
+
+footer {
+  height: 150px;
+  width: 100vw;
+  text-align: center;
+}
+
 .devicesFlex {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  overflow: hidden;
+  overflow-y: scroll;
   justify-content: center;
-  height: 50vh;
+  height: fit-content;
   padding: 30px;
 }
 
@@ -20,15 +54,15 @@
 .gearBagStyle {
   width: 100vw;
   height: 300px;
-  background: rgb(0, 112, 255, 0.5);
+  color: white;
+  background: rgba(45, 41, 38, .75);
   position: fixed;
   bottom: 0;
 }
 
-.gearBagButton {
-  position: fixed;
-  bottom: 300px;
-  left: 0px
+.gearBagStyle h2 {
+  font-size: 30px;
+  line-height: 10px;
 }
 
 .deviceStyle {
@@ -38,7 +72,7 @@
   padding: 8px;
   color: white;
   font-size: 30px;
-  border: 1px solid green;
+  border: 1px solid white;
   background-Position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -48,11 +82,10 @@
 }
 
 .deviceStyle p {
-  color: white;
   text-align: center;
   vertical-align: middle;
 }
 
 .deviceStyle p span {
-  background-color: rgb(181, 175, 174, 0.75);
+  background-color: rgb(158, 158, 158, 0.6);
 }

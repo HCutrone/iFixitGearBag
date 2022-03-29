@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState } from 'react'
 
 const Device = ( { device, inDeviceGrid } ) => {
   // the device component will display the images of each device as well as the title
@@ -24,7 +24,8 @@ const Device = ( { device, inDeviceGrid } ) => {
   // background: `url(${device.image.standard}) noRepeat 0 0`
 
   return (
-    <div className='deviceStyle' style={{  backgroundImage: `url(${device.image.standard})`  }} draggable='true' onDragStart={(event) => (inDeviceGrid) ? onDeviceDragStart(event, `${device.title}`) : onBagDragStart(event, `${device.title}`)}
+    <div className='deviceStyle' style={{  backgroundImage: `url(${device.image.standard})`  }} draggable='true'
+    onDragStart={(event) => (inDeviceGrid) ? onDeviceDragStart(event, `${device.title}`) : onBagDragStart(event, `${device.title}`)}
       // when mouse hovers over the device, hide the title and show the description
       onMouseEnter = {e => {
         setNameStyle({display: 'none'})

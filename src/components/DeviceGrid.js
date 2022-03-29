@@ -1,7 +1,7 @@
-import React, { useState, useRef, useCallback } from 'react'
+import React, { useRef, useCallback } from 'react'
 import Device from './Device.js'
 
-const DeviceGrid = ( { setOffset, width, devices, loading, error, hasMore, gearBag, setGearBag } ) => {
+const DeviceGrid = ( { setOffset, limit, devices, loading, error, hasMore, gearBag, setGearBag } ) => {
   // observer and IntersectionObservers look for the last loaded device on the page
   // and change the offset (if there are more devices to load)
   const observer = useRef()
@@ -16,7 +16,7 @@ const DeviceGrid = ( { setOffset, width, devices, loading, error, hasMore, gearB
 
     observer.current = new IntersectionObserver(entries => {
       if (entries[0].isIntersecting && hasMore) {
-        setOffset(prevOffset => prevOffset + width)
+        setOffset(prevOffset => prevOffset + limit)
       }
     })
 
@@ -42,10 +42,6 @@ const DeviceGrid = ( { setOffset, width, devices, loading, error, hasMore, gearB
 
     localStorage.clear()
     localStorage.setItem("gearBag", JSON.stringify(newGearBag))
-  }
-
-  const onDragOver = (event) => {
-    event.preventDefault()
   }
 
   return (
