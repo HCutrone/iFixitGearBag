@@ -1,12 +1,17 @@
+// Gear Bag component is the entire Gear Bag on the screen, including the flex box for the devices
+// Accepts devices dragged from the device grid
+
 import React from 'react'
+import PropTypes from 'prop-types'
 import Device from './Device.js'
 
 const GearBag = ( { gearBag, setGearBag, devices } ) => {
-
   const onDragOver = (event) => {
     event.preventDefault()
   }
 
+  // When a device from the device grid is dropped here, add the device to the gear bag
+  // Only adds it to the bag if not already in the bag
   const onDropInBag = (event) => {
     // get the name of the device we are dragging into the gear bag
     const deviceName = event.dataTransfer.getData("newDevice")
@@ -31,15 +36,16 @@ const GearBag = ( { gearBag, setGearBag, devices } ) => {
     })
 
     // setting the gearbag to include the previous devices and the new (dragged) device
-    setGearBag([...gearBag, ...newDevice])
+    setGearBag(prevGearBag => ([...prevGearBag, ...newDevice]))
   }
+  
 
   return (
-    <div className='gearBagStyle' onDrop={(event) => onDropInBag(event)} onDragOver={(event) => onDragOver(event)}>
-      <h2 style={{paddingLeft: 10}}>Your Gear:</h2>
+    <div className='gearBagStyle'
+    onDrop={(event) => onDropInBag(event)} onDragOver={(event) => onDragOver(event)}>
+      <h2>Your Gear:</h2>
       <div className='gearBagFlex'>
         {gearBag.map((device) => {
-          localStorage.setItem("gearBag", JSON.stringify(gearBag))
           return <div key={device.title}> <Device device={device} inDeviceGrid={false}></Device> </div>
         })}
       </div>
@@ -47,4 +53,11 @@ const GearBag = ( { gearBag, setGearBag, devices } ) => {
   )
 }
 
+GearBag.propTypes = {
+  gearBag: PropTypes.array.isRequired,
+  setGearBag: PropTypes.func.isRequired,
+  devices: PropTypes.array.isRequired
+}
+
 export default GearBag
+
