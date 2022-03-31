@@ -8,15 +8,16 @@ const Device = ( { device, inDeviceGrid } ) => {
   // we can use the State hook to hide/show the names and summaries
   const [nameTextStyle, setNameStyle] = useState({display: 'block', overflow: 'hidden', textOverflow: 'ellipsis'})
   const [summaryTextStyle, setSummaryStyle] = useState({display: 'none'})
+  const dragImage = new Image()
+  dragImage.src = `${device.image.thumbnail}`
 
   // onDeviceDragStart - called when a device component located in the device grid is dragged
   // transfers the name of the dragged device to its drop point
   // since some of the summaries overflow out of the device div, we set the drag image to the background image
+  // set the offset of the drag image to 150, 112 to make the image easier to see when dragging
   const onDeviceDragStart = (event, deviceName) => {
     event.dataTransfer.setData("newDevice", deviceName)
-    var img = new Image()
-    img.src = `${device.image.standard}`
-    event.dataTransfer.setDragImage(img, 0, 0)
+    event.dataTransfer.setDragImage(dragImage, 150, 112)
   }
 
   // onBagDragStart - called when a device component located in the gear bag is dragged
@@ -24,9 +25,7 @@ const Device = ( { device, inDeviceGrid } ) => {
   // since some of the summaries overflow out of the device div, we set the drag image to the background image
   const onBagDragStart = (event, deviceName) => {
     event.dataTransfer.setData("bagDevice", deviceName)
-    var img = new Image()
-    img.src = `${device.image.standard}`
-    event.dataTransfer.setDragImage(img, 0, 0)
+    event.dataTransfer.setDragImage(dragImage, 150, 112)
   }
 
   // return one div with the background image as the device image, and two <p>s

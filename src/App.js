@@ -56,7 +56,7 @@ function App() {
       {/* A footer element to tell user they loaded all of the devices! (Also pushes up the last row
           of devices so that they can be dragged and are not blocked by the gear bag) */}
       <footer>
-        <p>No more devices!</p>
+        {!loading && <p>No more devices!</p>}
       </footer>
     </>
   );

@@ -14,6 +14,24 @@ function useGetDevices(offset, limit, query) {
   const CancelToken = axios.CancelToken;
   let cancel;
 
+  const filterDevices = (fetchedDevices) => {
+    // now that we have fetched devices, we need to make sure we are only displaying leaf nodes (no children)
+    // then, for each device we need to check if it has children
+    fetchedDevices.map((currentDevice) => {
+      // get the children of the current device
+      axios.get(`https://www.ifixit.com/api/2.0/wikis/CATEGORY/${currentDevice.title}/children`).then(res => {
+        // if the length of the returned array is 0, the device has no children
+        // thus, it is a leaf node and we should show it
+        // we also check the data type because our search is more general, and pulls other data types as well
+        if ((res.data.length === 0) && (currentDevice.dataType === 'wiki')) {
+          setDevices(prevDevices => {
+            return [...prevDevices, currentDevice]
+          })
+        }
+      })
+    })
+  }
+
   // every time the input text box is changed, remove the already loaded devices
   useEffect(() => {
     setDevices([])
@@ -21,38 +39,59 @@ function useGetDevices(offset, limit, query) {
 
   // everytime the offset of the input text is changed, we need to fetch new devices
   useEffect(() => {
+    // set loading to true because we have started loading new devices
     setLoading(true)
+    // set error to false because...well we haven't started loading yet!
     setError(false)
+
     // if query is blank, we are fetching more from all devices
     if (query === '') {
+      // first we fetch a "limit"'s worth of devices
       axios.get(`https://www.ifixit.com/api/2.0/wikis/CATEGORY?offset=${offset}&limit=${limit}`).then(res => {
-        setDevices(prevDevices => {
-          return [...prevDevices, ...res.data]
-        })
+        // we just fetched new devices, so set our fetchedDevices variable
+        filterDevices(res.data)
+
+        // res.data.length is the number of devices we loaded, so if we loaded less than what we attempted to,
+          // we have reached the end
+        // res.data.length cannot be greater than limit
         setHasMore(res.data.length === limit)
+
+        // now, since we are done loading, we can set this to false
         setLoading(false)
-      }).catch(e => {
-        setError(true)
-      })
+    }).catch(e => {
+      // we encountered an error - so setError to true!
+      // TODO return the error
+      setError(true)
+    })
     } else {
       // otherwise, we need to pull from our search
       axios.get(`https://www.ifixit.com/api/2.0/search/${query}?offset=${offset}&limit=${limit}`, {
+        // we are setting up a cancel token so that if we change the input in the search box while fetching more devices,
+          // we can cancel the old now out of date fetch
         cancelToken: new CancelToken(function executor(c) {
           cancel = c;
         })
       }).then(res => {
-        setDevices(prevDevices => {
-          return [...prevDevices, ...res.data.results]
-        })
-        setHasMore(res.data.results.length === limit)
+        // once we get all of the devices, we need to make sure we are only displaying the leaf nodes
+        filterDevices(res.data.results)
+
+        // res.data.length is the number of devices we loaded, so if we loaded less than what we attempted to,
+          // we have reached the end
+        // res.data.length cannot be greater than limit
+        setHasMore(res.data.length === limit)
+
+        // now, since we are done loading, we can set this to false
         setLoading(false)
       }).catch(e => {
         // we want to cancel if the effect is called while running itself (changed input text before devices could be loaded)
         if (axios.isCancel(e)) return
+        // if we have a different error, setError!
+        // TODO return error
         setError(true)
       })
       return () => cancel()
     }
+
   }, [offset, query])
 
   return { loading, error, devices, hasMore }
