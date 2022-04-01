@@ -6,7 +6,7 @@ import React, { useRef, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import Device from './Device.js'
 
-const DeviceGrid = ( { setOffset, limit, devices, loading, error, hasMore, gearBag, setGearBag } ) => {
+const DeviceGrid = ( { setOffset, limit, devices, loading, hasMore, gearBag, setGearBag } ) => {
   // observer and IntersectionObservers look for the last loaded device on the page
   // and change the offset (if there are more devices to load)
   // Changing the offset activate the 'useGetDevices' useEffect, pulling more devices from the API
@@ -40,7 +40,7 @@ const DeviceGrid = ( { setOffset, limit, devices, loading, error, hasMore, gearB
   // Changing the Gear Bag activate App's GearBag useEffect, which updates the local storage
   const onDropInDevice = (event) => {
     const deviceName = event.dataTransfer.getData("bagDevice")
-
+ 
     const newGearBag = gearBag.filter((potDevice) => {
       if (!(potDevice.title === deviceName)) {
         return potDevice
@@ -63,10 +63,6 @@ const DeviceGrid = ( { setOffset, limit, devices, loading, error, hasMore, gearB
           return <div draggable key={device.title}> <Device device={device} inDeviceGrid={true}></Device> </div> 
         }
       })}
-
-      {/* simple divs to signify if we are getting more devices, or if we encountered an error */}
-      <div>{loading && 'Loading Devices..'}</div>
-      <div>{error && 'Error'}</div>
     </div>
   )
 }
@@ -76,7 +72,6 @@ DeviceGrid.propTypes = {
   limit: PropTypes.number.isRequired,
   devices: PropTypes.array.isRequired,
   loading: PropTypes.bool.isRequired,
-  error: PropTypes.bool.isRequired,
   hasMore: PropTypes.bool.isRequired,
   gearBag: PropTypes.array.isRequired,
   setGearBag: PropTypes.func.isRequired

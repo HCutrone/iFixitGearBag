@@ -9,7 +9,7 @@ import axios from 'axios'
 function useGetDevices(offset, limit, query) {
   const [loading, setLoading] = useState(true)
   const [devices, setDevices] = useState([])
-  const [error, setError] = useState(false)
+  const [hasError, setHasError] = useState(false)
   const [hasMore, setHasMore] = useState(false)
   const CancelToken = axios.CancelToken;
   let cancel;
@@ -18,17 +18,21 @@ function useGetDevices(offset, limit, query) {
     // now that we have fetched devices, we need to make sure we are only displaying leaf nodes (no children)
     // then, for each device we need to check if it has children
     fetchedDevices.map((currentDevice) => {
-      // get the children of the current device
-      axios.get(`https://www.ifixit.com/api/2.0/wikis/CATEGORY/${currentDevice.title}/children`).then(res => {
-        // if the length of the returned array is 0, the device has no children
-        // thus, it is a leaf node and we should show it
-        // we also check the data type because our search is more general, and pulls other data types as well
-        if ((res.data.length === 0) && (currentDevice.dataType === 'wiki')) {
-          setDevices(prevDevices => {
-            return [...prevDevices, currentDevice]
-          })
-        }
-      })
+      // since the search GET gets users and guides, we need to make sure we are only getting devices
+      if ((currentDevice.namespace === 'CATEGORY') && (currentDevice.dataType === 'wiki')) {
+        // get the children of the current device
+        axios.get(`https://www.ifixit.com/api/2.0/wikis/CATEGORY/${currentDevice.title}/children`).then(res => {
+          // if the length of the returned array is 0, the device has no children
+          // thus, it is a leaf node and we should show it
+          if (res.data.length === 0) {
+            setDevices(prevDevices => {
+              return [...prevDevices, currentDevice]
+            })
+          }
+        }).catch(e => {
+          setHasError(true)
+        })
+      }
     })
   }
 
@@ -41,8 +45,8 @@ function useGetDevices(offset, limit, query) {
   useEffect(() => {
     // set loading to true because we have started loading new devices
     setLoading(true)
-    // set error to false because...well we haven't started loading yet!
-    setError(false)
+    // clear the error because...well we haven't started loading yet!
+    setHasError(false)
 
     // if query is blank, we are fetching more from all devices
     if (query === '') {
@@ -58,11 +62,10 @@ function useGetDevices(offset, limit, query) {
 
         // now, since we are done loading, we can set this to false
         setLoading(false)
-    }).catch(e => {
-      // we encountered an error - so setError to true!
-      // TODO return the error
-      setError(true)
-    })
+      }).catch(e => {
+        // we encountered an error - so set the error
+        setHasError(true)
+      })
     } else {
       // otherwise, we need to pull from our search
       axios.get(`https://www.ifixit.com/api/2.0/search/${query}?offset=${offset}&limit=${limit}`, {
@@ -85,16 +88,16 @@ function useGetDevices(offset, limit, query) {
       }).catch(e => {
         // we want to cancel if the effect is called while running itself (changed input text before devices could be loaded)
         if (axios.isCancel(e)) return
+
         // if we have a different error, setError!
-        // TODO return error
-        setError(true)
+        setHasError(true)
       })
       return () => cancel()
     }
 
   }, [offset, query])
 
-  return { loading, error, devices, hasMore }
+  return { loading, devices, hasMore, hasError }
 }
 
 useGetDevices.defaultProps = { query: '' }

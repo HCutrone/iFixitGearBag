@@ -38,12 +38,23 @@ const GearBag = ( { gearBag, setGearBag, devices } ) => {
     // setting the gearbag to include the previous devices and the new (dragged) device
     setGearBag(prevGearBag => ([...prevGearBag, ...newDevice]))
   }
+
+  // scroll the window back to the top of the page
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0, 
+      behavior: 'smooth'
+    });
+  }
   
 
   return (
     <div className='gearBagStyle'
     onDrop={(event) => onDropInBag(event)} onDragOver={(event) => onDragOver(event)}>
-      <h2>Your Gear:</h2>
+      <div className='gearBagHeader'>
+        <h2>Your Gear:</h2>
+        <button onClick={scrollToTop}>Scroll to Top</button>
+      </div>
       <div className='gearBagFlex'>
         {gearBag.map((device) => {
           return <div key={device.title}> <Device device={device} inDeviceGrid={false}></Device> </div>

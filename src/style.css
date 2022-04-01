@@ -60,13 +60,31 @@ footer {
   bottom: 0;
 }
 
-.gearBagStyle h2 {
+.gearBagHeader {
+  display: flex;
+  flex-direction: row;
+}
+
+.gearBagHeader h2 {
+  width: 100%;
   padding-left: 10px;
   font-size: 30px;
   line-height: 10px;
 }
 
+.gearBagHeader button {
+  width: 150px;
+  float: right;
+  font-size: 18px;
+  margin-top: 15px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  background-color: white;
+  cursor: pointer;
+}
+
 .deviceStyle {
+  cursor: pointer;
   width: 300px;
   height: 200px;
   margin: 6px;
@@ -88,5 +106,5 @@ footer {
 }
 
 .deviceStyle p span {
-  background-color: rgb(158, 158, 158, 0.6);
+  background-color: rgb(0, 0, 0, 0.5);
 }

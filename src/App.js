@@ -25,12 +25,12 @@ function App() {
     setOffset(0)
   }
 
-  // uses our API hook to load devices 
+  // uses our API hook to load devices and bools
   const {
     devices,
     hasMore,
     loading,
-    error
+    hasError
   } = useGetDevices(offset, limit, query)
 
   //TODO: add touch functionality for tablet/phone
@@ -47,16 +47,19 @@ function App() {
 
       {/* The main element that holds all of the loaded devices */}
       <DeviceGrid setOffset={setOffset} limit={limit} 
-        devices={devices} loading={loading} error={error} hasMore={hasMore}
+        devices={devices} loading={loading} hasMore={hasMore}
         gearBag={gearBag} setGearBag={setGearBag} />
 
       {/* The element for the gear bag at the bottom of the screen */}
       <GearBag gearBag={gearBag} setGearBag={setGearBag} devices={devices} />
 
-      {/* A footer element to tell user they loaded all of the devices! (Also pushes up the last row
-          of devices so that they can be dragged and are not blocked by the gear bag) */}
+      {/* A footer element to tell user they loaded all of the devices, if we are loading more,
+          or if we encountered an error. (Also pushes up the last row of devices so that they
+          can be dragged and are not blocked by the gear bag) */}
       <footer>
         {!loading && <p>No more devices!</p>}
+        {loading && <p>Loading Devices...</p>}
+        {hasError && <p>Error!</p>}
       </footer>
     </>
   );
